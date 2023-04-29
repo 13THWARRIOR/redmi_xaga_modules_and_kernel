@@ -1,0 +1,85 @@
+. ${ROOT_DIR}/${KERNEL_DIR}/build.config.common
+
+ARCH=arm64
+
+LLVM_IAS=1
+CROSS_COMPILE=aarch64-linux-gnu-
+CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
+LINUX_GCC_CROSS_COMPILE_PREBUILTS_BIN=prebuilts/gas/linux-x86
+
+MAKE_GOALS="
+modules
+"
+
+FILES="
+modules.builtin
+modules.builtin.modinfo
+"
+
+DEFCONFIG=${DEFCONFIG:-xaga_gki_defconfig}
+# GKI_FRAGMENT_DEFCONFIG=${GKI_FRAGMENT_DEFCONFIG:-${KERNEL_DIR}/arch/arm64/configs/matisse_gki.fragment}
+PRE_DEFCONFIG_CMDS="KCONFIG_CONFIG=${ROOT_DIR}/${KERNEL_DIR}/arch/arm64/configs/${DEFCONFIG} ${ROOT_DIR}/${KERNEL_DIR}/scripts/kconfig/merge_config.sh -m -r ${ROOT_DIR}/${KERNEL_DIR}/arch/arm64/configs/gki_defconfig ${ROOT_DIR}/${KERNEL_DIR}/arch/arm64/configs/mikrn_xaga_defconfig"
+POST_DEFCONFIG_CMDS="rm ${ROOT_DIR}/${KERNEL_DIR}/arch/arm64/configs/${DEFCONFIG}"
+
+MAKE_GOALS="${MAKE_GOALS}
+"
+
+ABI_DEFINITION=android/abi_gki_aarch64.xml
+TIDY_ABI=1
+KMI_SYMBOL_LIST=android/abi_gki_aarch64
+ADDITIONAL_KMI_SYMBOL_LISTS="
+android/abi_gki_aarch64_type_visibility
+android/abi_gki_aarch64_core
+android/abi_gki_aarch64_db845c
+android/abi_gki_aarch64_exynos
+android/abi_gki_aarch64_exynosauto
+android/abi_gki_aarch64_fips140
+android/abi_gki_aarch64_galaxy
+android/abi_gki_aarch64_generic
+android/abi_gki_aarch64_hikey960
+android/abi_gki_aarch64_honor
+android/abi_gki_aarch64_imx
+android/abi_gki_aarch64_lenovo
+android/abi_gki_aarch64_mtk
+android/abi_gki_aarch64_oplus
+android/abi_gki_aarch64_qcom
+android/abi_gki_aarch64_rockchip
+android/abi_gki_aarch64_unisoc
+android/abi_gki_aarch64_virtual_device
+android/abi_gki_aarch64_vivo
+android/abi_gki_aarch64_xiaomi
+android/abi_gki_aarch64_asus
+android/abi_gki_aarch64_transsion
+android/abi_gki_aarch64_tuxera
+"
+
+FILES="${FILES}
+"
+
+TRIM_NONLISTED_KMI=${TRIM_NONLISTED_KMI:-1}
+KMI_SYMBOL_LIST_STRICT_MODE=${KMI_SYMBOL_LIST_STRICT_MODE:-1}
+KMI_ENFORCED=1
+
+if [ -n "${GKI_DEFCONFIG_FRAGMENT}" ]; then
+source ${GKI_DEFCONFIG_FRAGMENT}
+fi
+
+SKIP_EXT_MODULES=""
+DO_NOT_STRIP_MODULES=""
+
+DEVICE_DIR=redmi/xaga/vendor/mediatek/kernel_modules
+
+# MODULES_LIST=redmi/xaga/kernel-5.10/vendor_boot_modules.matisse
+# MODULES_BLOCKLIST=redmi/xaga/kernel-5.10/vendor_boot_blacklist.matisse
+EXT_MODULES="${DEVICE_DIR}/connectivity/common
+${DEVICE_DIR}/connectivity/conninfra
+${DEVICE_DIR}/connectivity/connfem
+${DEVICE_DIR}/connectivity/gps/gps_stp
+${DEVICE_DIR}/connectivity/gps/data_link/plat/v010
+${DEVICE_DIR}/connectivity/gps/data_link/plat/v030
+${DEVICE_DIR}/connectivity/gps/data_link/plat/v050
+${DEVICE_DIR}/connectivity/gps/gps_pwr
+${DEVICE_DIR}/connectivity/gps/gps_scp
+${DEVICE_DIR}/gpu
+${DEVICE_DIR}/connectivity/fmradio
+"
