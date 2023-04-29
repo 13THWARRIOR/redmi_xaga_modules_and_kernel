@@ -6,4 +6,7 @@ How to compile gki kernel and get modules from vendor kernel :
 - clone this repository into redmi folder under the root directory of aosp common kernel directory structure
 - use this command to compile the kernel and get boot.img and vendor modules:
   SKIP_MRPROPER=1 SKIP_IF_VERSION_MATCHES=1 GKI_BUILD_CONFIG=common/build.config.gki.aarch64 BUILD_CONFIG=redmi/xaga/kernel-5.10/build.config.xaga KERNEL_BINARY=Image.gz AVB_SIGN_BOOT_IMG=1 AVB_BOOT_PARTITION_SIZE=65536000 AVB_BOOT_KEY=./redmi/gki/testdata/testkey_rsa2048.pem AVB_BOOT_ALGORITHM=SHA256_RSA2048 BUILD_BOOT_IMG=1 SKIP_VENDOR_BOOT=1 BOOT_IMAGE_HEADER_VERSION=4 GKI_RAMDISK_PREBUILT_BINARY=./redmi/boot-artifacts/gki/ramdisk KERNEL_CMDLINE="" MKBOOTIMG_EXTRA_ARGS="--os_patch_level 2023-05 --os_version 12.0.0" PAGE_SIZE=4096 LTO=thin CC=clang build/build.sh
+- ramdisk is taken from latest gki aosp kernel 2023-04. 
+- ramdisk is magisk 26.2 patched already.
+- encryption key is aosp dummy key.
 - i will not be covering how to create vendor_boot.img for the time being 
